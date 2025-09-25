@@ -14,53 +14,66 @@
 
 ---
 
+
+## Contents
+<!-- TOC (no expansion for Quick Start Guide / Fully Reproducing Guide) -->
+- [Introduction](#introduction)
+- [Models](#models)
+- [Datasets](#datasets)
+- [Results](#evaluation-results)
+- [Quick Start with HuggingFace](#quick-start-with-huggingface)
+- [Evaluation](#evaluation)
+- [Quick Start For Training](#quick-start-guide)
+- [Fully Reproducing Guide](#fully-reproducing-guide)
+- [Citation](#citation)
+- [Acknowledgement](#acknowledgement)
+
+
 ## Introduction
 **LLaVA-OneVision1.5** introduces a novel family of **fully open-source** Large Multimodal Models (LMMs) that achieves **state-of-the-art performance**  with substantially **lower cost** through training on **native resolution** images.
 
-1. **Superior Performance**
-A family of fully open-source large multimodal models demonstrating **superior performance** across multiple multimodal benchmarks, **outperforming Qwen2.5-VL** in most evaluation tasks.
+- **Superior Performance**
+A family of fully open-source large multimodal models demonstrating 
+    - Superior performance across multiple multimodal benchmarks
+    - outperforming Qwen2.5-VL** in most evaluation tasks.
 
-2. **High-Quality Data at Scale**
+- **High-Quality Data at Scale**
 Meticulously curated **pre-training and SFT data** with rigorous filtering and quality control, achieving **superior data efficiency** with only **64B tokens**.
-- Concept-balanced, highly diverse, high-quality caption data
-- Comprehensive instruction fine-tuning data covering a wide range of tasks
+    - Concept-balanced, highly diverse, high-quality caption data
+    - Comprehensive instruction fine-tuning data covering a wide range of tasks
 
-3. **Ultra-Efficient Training Framework**
-Complete end-to-end training framework designed for maximum efficiency:
-- $16000 total budget for full model training on A100 GPUs  ($0.6 per GPU/Hour)
-- 45% HFU efficiency in 8k context length
-- Built on **MegatronLM** with support for **MoE**, **FP8**, and **long sequence parallelization**
-- Optimized codebase for cost-effective scaling
+- **Ultra-Efficient Training Framework** Complete end-to-end training framework designed for maximum efficiency:
+    - $16000 total budget for full model training on A100 GPUs  ($0.6 per GPU/Hour)
+    - 45% HFU efficiency in 8k context length
+    - Built on **MegatronLM** with support for **MoE**, **FP8**, and **long sequence parallelization**
+    - Optimized codebase for cost-effective scaling
 
-- - [ ] Better data load balancing optimization
-- - [ ] More efficient multimodal model parallelism strategy
-- - [ ] FP8 training support cases/examples
 
-4. **Fully Open Framework** for community access and reproducibility:
-- ✅ High-quality pre-training & SFT data
-- ✅ Complete training framework & code
-- ✅ Training recipes & configurations
-- ✅ Base & instruct model checkpoints
-- ✅ Comprehensive training logs & metrics
+- **Fully Open Framework** for community access and reproducibility:
+    - High-quality pre-training & SFT data
+    - Complete training framework & code
+    - Training recipes & configurations
+    - Comprehensive training logs & metrics
 
 
 ## Models
 
-| Model                  | #Vision Param | #Language Param | #Total Param | HF Link                                                                      |
-|------------------------|---------------|-----------------|--------------|------------------------------------------------------------------------------|
-| LLaVA-OV-1.5-4B-Instruct      | 0.3B          | 4.4B            | 4.7B         | [🤗 link]()                |
-| LLaVA-OV-1.5-8B-Instruct      | 0.3B          | 8.2B            | 8.5B         | [🤗 link](https://huggingface.co/lmms-lab/LLaVA-OneVision-1.5-8B-Instruct) |
+| Model                     | HuggingFace Link |
+|---------------------------|------------------|
+| LLaVA-OV-1.5-4B-Instruct  | (coming soon)    |
+| LLaVA-OV-1.5-8B-Instruct  | [🤗](https://huggingface.co/lmms-lab/LLaVA-OneVision-1.5-8B-Instruct) |
 
 
 ## Datasets
 
 ![Dataset Visualization](asset/dataset.jpg)
+<p align="center"><b></b> (a) The vocabulary coverage proportion in the LLaVA-OneVision-1.5-Mid-Traning dataset
+before and after concept balancing. (b) Distribution of data sources within the LLaVA-OneVision-1.5Mid-Traning dataset. (c) Distribution of data sources within the LLaVA-OneVision-1.5-Mid-Traningdataset.</p>
 
-
-| Description | Link |
-|-------------|------|
-| Mid-training data for LLaVA-OneVision-1.5 | [🤗 Download (Uploading!)](https://huggingface.co/datasets/lmms-lab/LLaVA-One-Vision-1.5-Mid-Training-85M) |
-| SFT data for LLaVA-OneVision-1.5 | [🤗 Download (Uploading!)](https://huggingface.co/datasets/lmms-lab/LLaVA-OneVision-1.5-Insturct-Data) |
+| Description        | Link                                                                                                   | Status      |
+|--------------------|--------------------------------------------------------------------------------------------------------|-------------|
+| OV-1.5-Mid-Training-85M   | [🤗](https://huggingface.co/datasets/lmms-lab/LLaVA-One-Vision-1.5-Mid-Training-85M) | Uploading…  |
+| OV-1.5-Instruct           | [🤗](https://huggingface.co/datasets/lmms-lab/LLaVA-OneVision-1.5-Insturct-Data)     | Uploading…  |
 
 
 ## Evaluation Results
@@ -68,35 +81,9 @@ Complete end-to-end training framework designed for maximum efficiency:
 
 All evaluations were conducted using lmms_eval.
 
-|                                  | **LLaVA-OV-1.5-8B** | **Qwen2.5 VL 7B** | **LLaVA-OV-1.5-4B** | **Qwen2.5 VL 3B** |
-|:----------------------------------|:---------------:|:-------------:|:---------------:|:-------------:|
-| MMMU (Validation)                 |    **55.44**    |     51.33     |    **51.44**    |     46.44     |
-| MMMU-Pro (Standard)               |    **37.40**    |     36.30     |    **33.24**    |     31.10     |
-| MMMU-Pro (Vision)                 |      25.15      |   **32.83**   |    **23.53**    |     21.27     |
-| MMBench (English; Test)           |    **84.14**    |     83.40     |    **82.29**    |     77.97     |
-| MMBench (Chinese; Test)           |      81.00      |   **81.61**   |    **76.73**    |     74.55     |
-| MME-RealWorld (English)           |    **62.31**    |     57.33     |    **57.16**    |     51.60     |
-| MME-RealWorld (Chinese)           |    **56.11**    |     51.50     |      21.38      |   **45.38**   |
-| AI2D (With Mask)                  |    **84.16**    |     82.58     |    **84.62**    |     78.56     |
-| AI2D (Without Mask)               |    **94.11**    |     93.36     |    **92.84**    |     90.74     |
-| CV-Bench                          |    **80.82**    |     79.95     |    **74.00**    |     71.53     |
-| VL-RewardBench                    |      45.90      |   **49.65**   |    **45.90**    |     42.06     |
-| V*                                |    **78.01**    |     76.96     |      66.49      |   **69.63**   |
-| PixmoCount                        |      62.19      |   **63.33**   |    **59.17**    |     50.85     |
-| CountBench                        |    **88.19**    |     86.35     |    **77.80**    |     72.51     |
-| ChartQA                           |    **86.48**    |     84.08     |    **85.11**    |     83.36     |
-| CharXiv (Direct Questions)        |    **74.10**    |     69.80     |    **70.70**    |     58.20     |
-| DocVQA (Test)                     |    **95.00**    |     94.93     |    **93.48**    |     92.67     |
-| InfoVQA (Test)                    |      78.42      |   **81.67**   |    **75.27**    |     75.63     |
-| WeMath                            |    **33.62**    |     33.33     |    **28.00**    |     18.38     |
-| MathVista (Mini)                  |    **69.57**    |     68.60     |    **67.36**    |     60.23     |
-| MathVision                        |    **25.56**    |     22.37     |    **22.76**    |     21.25     |
-| MMStar                            |    **67.72**    |     62.54     |    **64.22**    |     55.86     |
-| SEED-Bench (Image)                |      77.32      |   **77.53**   |    **76.74**    |     74.81     |
-| ScienceQA                         |    **94.98**    |     88.75     |    **92.05**    |     83.33     |
-| SEED-Bench 2-Plus                 |      69.21      |   **70.93**   |    **68.42**    |     68.64     |
-| OCRBench                          |      82.90      |   **84.20**   |      77.80      |   **79.20**   |
-| RealWorldQA                       |      68.10      |   **68.50**   |    **64.05**    |     60.00     |
+![](asset/performance.png)
+<p align="center"><b></b> Performance comparison across vision-language models on various benchmarks grouped by task
+type. All scores are reported as accuracy percentages unless otherwise specified.</p>
 
 
 ## Quick Start with HuggingFace
@@ -360,7 +347,7 @@ Thanks so much to all of our amazing contributors!
                 <a href="https://github.com/RobitYadda">
                     <img src="https://avatars.githubusercontent.com/u/6811311?v=4" width="100;" alt="RobitYadda"/>
                     <br />
-                    <sub><b>闫梓祯@智能引擎</b></sub>
+                    <sub><b>zizhenyan</b></sub>
                 </a>
             </td>
 		</tr>
